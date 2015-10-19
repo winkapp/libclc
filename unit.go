@@ -36,15 +36,27 @@ func WriteUnit(unit *Unit, t *template.Template, p string) (error) {
   fileName := unitFileName(unit)
   var err error
 
-  if t == nil {
-    t, err = GetTemplate("Service Template", "service.template")
+  t, err = unitTemplate(t)
+  if err != nil {
+    return err
   }
   err = WriteTemplatedFile(unit, t, path.Join(p, fileName))
   return err
 }
 
 func MakeUnit(service *Unit, t *template.Template, w *bufio.Writer) (error) {
+  t, err := unitTemplate(t)
+  if err != nil {
+    return err
+  }
   return t.Execute(w, service)
+}
+
+func unitTemplate(t *template.Template) (*template.Template, error) {
+  if t == nil {
+    return GetTemplate("Service Template", "service.template")
+  }
+  return t, nil
 }
 
 func unitFileName(service *Unit) string {
