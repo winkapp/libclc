@@ -35,11 +35,15 @@ func checkTemplate(ttype string, t *template.Template) (*template.Template, erro
   }
   switch ttype {
   case "cc":
-    return getTemplate("Cloud Config Template", "cloud-config.template")
+    return getTemplate("Cloud Config", "cloud-config.template")
   case "ud":
-    return getTemplate("User Data Template", "user-data.template")
+    return getTemplate("User Data", "user-data.template")
   case "unit":
-    return getTemplate("Service Template", "service.template")
+    return getTemplate("Service", "service.template")
+  case "vf":
+    return getTemplate("Vagrantfile", "Vagrantfile.template")
+  case "crb":
+    return getTemplate("Config.rb", "config.rb.template")
   }
   return nil, nil
 }
