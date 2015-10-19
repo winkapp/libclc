@@ -1,6 +1,19 @@
 #cloud-config
 ---
 write_files:
+  - path: /home/core/etcd_env.sh
+    owner: core:core
+    permissions: 744
+    content: |
+      service=$1
+      rm -f /home/core/env/${service}_environment
+      mkdir -p /home/core/env
+      env_array=(`etcdctl ls /services/${service}/env | sed -e :a -e "$!N;s/\n/ /;ta"`)
+      for i in "${env_array[@]}"
+      do
+        :
+        echo "${i##*/}=$(/usr/bin/etcdctl get ${i})" >> /home/core/env/${service}_environment
+      done
 {{with .Files}}
   {{range .}}
   - path: {{.Path}}
