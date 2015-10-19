@@ -17,7 +17,7 @@ type Unit struct {
   Type string
   Filename string
   Restart string
-  Envs []string
+  Environment []string
   Ports []string
   Xfleet []string
 }
