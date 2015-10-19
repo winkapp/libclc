@@ -6,6 +6,7 @@ import (
 )
 
 type File struct {
+  HostPath string
   Path string
   Content string
   Owner string
