@@ -22,6 +22,11 @@ func WriteUserData(config *CloudConfig, t *template.Template, path string) (erro
   return err
 }
 
+func WriteCloudConfig(config *CloudConfig, t *template.Template, path string) (error) {
+  err := WriteTemplatedFile(config, t, path)
+  return err
+}
+
 func MakeUserData(service *CloudConfig, t *template.Template, w *bufio.Writer) (error) {
   return t.Execute(w, service)
 }

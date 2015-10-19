@@ -33,7 +33,11 @@ func WriteUnits(units *UnitConfig, t *template.Template, path string) (error) {
 
 func WriteUnit(unit *Unit, t *template.Template, path string) (error) {
   fileName := unitFileName(unit)
-  err := WriteTemplatedFile(unit, t, path + "/" + fileName)
+  var err error
+  if t == nil {
+    t, err = GetTemplate("Service Template", "service.template")
+  }
+  err = WriteTemplatedFile(unit, t, path + "/" + fileName)
   return err
 }
 
