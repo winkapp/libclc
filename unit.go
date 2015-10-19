@@ -3,6 +3,7 @@ package libclc
 import (
   "text/template"
   "bufio"
+  "path"
 )
 
 type UnitConfig struct {
@@ -31,13 +32,14 @@ func WriteUnits(units *UnitConfig, t *template.Template, path string) (error) {
   return nil
 }
 
-func WriteUnit(unit *Unit, t *template.Template, path string) (error) {
+func WriteUnit(unit *Unit, t *template.Template, p string) (error) {
   fileName := unitFileName(unit)
   var err error
+
   if t == nil {
     t, err = GetTemplate("Service Template", "service.template")
   }
-  err = WriteTemplatedFile(unit, t, path + "/" + fileName)
+  err = WriteTemplatedFile(unit, t, path.Join(p, fileName))
   return err
 }
 

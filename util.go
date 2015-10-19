@@ -5,9 +5,11 @@ import (
   "bufio"
   "os"
   "io/ioutil"
+  "runtime"
+  "path"
 )
 
-var template_dir string = os.ExpandEnv("$GOPATH/src/github.com/winkapp/libclc/templates")
+var template_dir string = ""
 
 func WriteTemplatedFile(data interface{}, t *template.Template, path string) (error) {
   f, err := os.Create(path)
@@ -25,7 +27,7 @@ func WriteTemplatedFile(data interface{}, t *template.Template, path string) (er
 }
 
 func GetTemplate(name string, filename string) (t *template.Template, err error) {
-  templ, err := getFile(template_dir + "/" + filename)
+  templ, err := getFile(path.Join(templateDir(), filename))
   if err != nil {
     return nil, err
   }
@@ -36,4 +38,12 @@ func GetTemplate(name string, filename string) (t *template.Template, err error)
 func getFile(path string) (string, error) {
   dat, err := ioutil.ReadFile(path)
   return string(dat), err
+}
+
+func templateDir() (string) {
+  if template_dir == "" {
+    _, filename, _, _ := runtime.Caller(1)
+    template_dir = path.Join(path.Dir(filename), "templates")
+  }
+  return template_dir
 }
