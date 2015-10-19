@@ -11,7 +11,49 @@ import (
 
 var template_dir string = ""
 
-func WriteTemplatedFile(data interface{}, t *template.Template, path string) (error) {
+
+
+func WriteTemplate(ttype string, data interface{}, t *template.Template, path string) (error) {
+  t, err := checkTemplate(ttype, t)
+  if err != nil {
+    return err
+  }
+  return writeTemplatedFile(data, t, path)
+}
+
+func BufferTemplate(ttype string, data interface{}, t *template.Template, w *bufio.Writer) (error) {
+  t, err := checkTemplate(ttype, t)
+  if err != nil {
+    return err
+  }
+  return t.Execute(w, data)
+}
+
+func checkTemplate(ttype string, t *template.Template) (*template.Template, error) {
+  if t != nil {
+    return t, nil
+  }
+  switch ttype {
+  case "cc":
+    return getTemplate("Cloud Config Template", "cloud-config.template")
+  case "ud":
+    return getTemplate("User Data Template", "user-data.template")
+  case "unit":
+    return getTemplate("Service Template", "service.template")
+  }
+  return nil, nil
+}
+
+func getTemplate(name string, filename string) (t *template.Template, err error) {
+  templ, err := getFile(path.Join(templateDir(), filename))
+  if err != nil {
+    return nil, err
+  }
+  t = template.New(name)
+  return t.Parse(templ)
+}
+
+func writeTemplatedFile(data interface{}, t *template.Template, path string) (error) {
   f, err := os.Create(path)
   if err != nil {
     return err
@@ -24,15 +66,6 @@ func WriteTemplatedFile(data interface{}, t *template.Template, path string) (er
   }
   w.Flush()
   return nil
-}
-
-func GetTemplate(name string, filename string) (t *template.Template, err error) {
-  templ, err := getFile(path.Join(templateDir(), filename))
-  if err != nil {
-    return nil, err
-  }
-  t = template.New(name)
-  return t.Parse(templ)
 }
 
 func getFile(path string) (string, error) {

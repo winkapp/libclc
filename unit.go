@@ -33,33 +33,17 @@ func WriteUnits(units *UnitConfig, t *template.Template, path string) (error) {
 }
 
 func WriteUnit(unit *Unit, t *template.Template, p string) (error) {
-  fileName := unitFileName(unit)
-  var err error
+  fileName := UnitFileName(unit)
+  unitPath := path.Join(p, fileName)
 
-  t, err = unitTemplate(t)
-  if err != nil {
-    return err
-  }
-  err = WriteTemplatedFile(unit, t, path.Join(p, fileName))
-  return err
+  return WriteTemplate("unit", unit, t, unitPath)
 }
 
-func MakeUnit(service *Unit, t *template.Template, w *bufio.Writer) (error) {
-  t, err := unitTemplate(t)
-  if err != nil {
-    return err
-  }
-  return t.Execute(w, service)
+func BufferUnit(unit *Unit, t *template.Template, w *bufio.Writer) (error) {
+  return BufferTemplate("unit", unit, t, w)
 }
 
-func unitTemplate(t *template.Template) (*template.Template, error) {
-  if t == nil {
-    return GetTemplate("Service Template", "service.template")
-  }
-  return t, nil
-}
-
-func unitFileName(service *Unit) string {
+func UnitFileName(service *Unit) string {
   switch service.Type {
   case "single":
     service.Filename = (service.Name + ".service")

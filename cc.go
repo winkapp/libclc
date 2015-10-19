@@ -17,16 +17,10 @@ type CloudConfig struct {
   Files []*File
 }
 
-func WriteUserData(config *CloudConfig, t *template.Template, path string) (error) {
-  err := WriteTemplatedFile(config, t, path)
-  return err
-}
-
 func WriteCloudConfig(config *CloudConfig, t *template.Template, path string) (error) {
-  err := WriteTemplatedFile(config, t, path)
-  return err
+  return WriteTemplate("cc", config, t, path)
 }
 
-func MakeUserData(service *CloudConfig, t *template.Template, w *bufio.Writer) (error) {
-  return t.Execute(w, service)
+func BufferCloudConfig(config *CloudConfig, t *template.Template, w *bufio.Writer) (error) {
+  return BufferTemplate("cc", config, t, w)
 }
