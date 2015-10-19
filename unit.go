@@ -3,7 +3,6 @@ package libclc
 import (
   "text/template"
   "bufio"
-  "os"
 )
 
 type UnitConfig struct {
@@ -34,18 +33,8 @@ func WriteUnits(units *UnitConfig, t *template.Template, path string) (error) {
 
 func WriteUnit(unit *Unit, t *template.Template, path string) (error) {
   fileName := unitFileName(unit)
-  f, err := os.Create(path + "/" + fileName)
-  if err != nil {
-    return err
-  }
-  defer f.Close()
-  w := bufio.NewWriter(f)
-  err = MakeUnit(unit, t, w)
-  if err != nil {
-    return err
-  }
-  w.Flush()
-  return nil
+  err := WriteTemplatedFile(unit, t, path + "/" + fileName)
+  return err
 }
 
 func MakeUnit(service *Unit, t *template.Template, w *bufio.Writer) (error) {
