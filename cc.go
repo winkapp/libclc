@@ -6,7 +6,7 @@ import (
 )
 
 type File struct {
-  HostPath string
+  HostPath string `yaml:"host_path"`
   Path string
   Content string
   Owner string
