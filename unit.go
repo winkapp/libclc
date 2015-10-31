@@ -13,6 +13,7 @@ type UnitConfig struct {
 type Unit struct {
   Name string
   Image string
+  Seq string `yaml:"sequence_number"`
   Command string
   Type string
   Filename string
@@ -46,9 +47,9 @@ func BufferUnit(unit *Unit, t *template.Template, w *bufio.Writer) (error) {
 func UnitFileName(service *Unit) string {
   switch service.Type {
   case "single":
-    service.Filename = (service.Name + ".service")
+    service.Filename = (service.Name + service.Seq + ".service")
   case "multi":
-    service.Filename = (service.Name + "@.service")
+    service.Filename = (service.Name + service.Seq + "@.service")
   }
 
   return service.Filename
